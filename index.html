@@ -4,12 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>پلن‌های اشتراک — بیزتاک</title>
-<style>
-    /* 👇 اینجاست که کد رو می‌ذاری */
-    strong {
-      font-weight: 700;
-      color: #222;
-    }
+
   <style>
     /* پایه */
     :root{
@@ -295,24 +290,11 @@
     </footer>
   </div>
 
-  <script>
-    // تابع کپی ساده برای هر کارت (کپی HTML همان بخش)
-    function copyCardHTML(e, id){
-      e.preventDefault();
-      let container;
-      if(id==='base') container = document.querySelector('.plan-base');
-      else if(id==='silver') container = document.querySelector('.plan-silver');
-      else container = document.querySelector('.plan-gold');
-
-      if(!container){ alert('کارت پیدا نشد'); return; }
-      // کپی HTML کارت
-      navigator.clipboard.writeText(container.outerHTML).then(()=>{
-        alert('کد HTML کارت به کلیپ‌بورد کپی شد. می‌توانید آن را در ایمیل یا فایل قرار دهید.');
-      }).catch(()=> alert('کپی ناموفق بود — ممکن است مرورگر شما اجازه ندهد.'));
-    }
+  
   </script>
 </body>
 </html>
+
 
 
 
