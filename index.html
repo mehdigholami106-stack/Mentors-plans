@@ -3,172 +3,307 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>پلن‌های درآمدی مشاور — بیزتاک</title>
+  <title>پلن‌های اشتراک — بیزتاک</title>
+
   <style>
-    /* Reset ساده */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Arial, "Noto Sans", sans-serif; }
-    html,body { height:100%; background: linear-gradient(180deg,#f7fafc,#ffffff); color:#122; }
-    body { display:flex; align-items:center; justify-content:center; padding:24px; }
+    /* پایه */
+    :root{
+      --bg:#f6f8fb;
+      --card-bg: #ffffff;
+      --muted:#6b7280;
+      --text:#0f1724;
+      --accent-gold: #e0a800;
+      --accent-silver: linear-gradient(135deg,#cbd5e1,#e6eef8);
+      --accent-blue: #0b6fa8;
+      --border: rgba(15,23,36,0.08);
+      --glass: rgba(255,255,255,0.6);
+    }
 
-    /* کارت اصلی */
-    .container { width:100%; max-width:900px; }
-    header { text-align:center; margin-bottom:20px; }
-    header h1 { font-size:24px; margin-bottom:8px; }
-    header p { color:#536; font-size:14px; }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: "Vazirmatn", "Segoe UI", Tahoma, Arial, sans-serif;
+      background: radial-gradient(1200px 400px at 10% 10%, rgba(14,165,233,0.03), transparent 10%),
+                  linear-gradient(180deg, var(--bg), #ffffff);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      padding:28px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
 
-    .card { background:#fff; border-radius:12px; box-shadow: 0 6px 18px rgba(20,30,60,0.08); overflow:hidden; display:grid; grid-template-columns: 1fr 380px; gap:0; }
-    @media (max-width:800px) { .card { grid-template-columns: 1fr; } }
+    .wrap{ width:100%; max-width:1200px; }
 
-    /* ستون توضیحات */
-    .left { padding:28px; }
-    .plan-title { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-    .badge { background:#eef9f1; color:#087a4b; padding:6px 10px; border-radius:8px; font-weight:600; font-size:13px; }
-    h2 { font-size:20px; color:#0b3c3a; }
-    .desc { margin:12px 0 18px; color:#445; line-height:1.5; font-size:14px; }
+    header{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    header h1{ font-size:20px; margin-bottom:6px; }
+    header p{ color:var(--muted); font-size:13px; margin:0 12px; }
 
-    .features { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; margin-bottom:20px; }
-    @media (max-width:520px) { .features { grid-template-columns:1fr; } }
-    .feature { background:#fbfdff; border:1px solid #eef3f8; padding:10px; border-radius:8px; font-size:14px; color:#214; }
+    /* شبکه کارت‌ها - Gestalt: similarity (یک‌پارچگی)، proximity */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap:20px;
+      align-items:stretch;
+    }
+    @media (max-width:960px){
+      .cards{ grid-template-columns: 1fr; }
+    }
 
-    .numbers { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
-    .num { background:#f5f8ff; border-radius:8px; padding:10px 12px; font-weight:700; color:#123; }
+    /* یک کارت */
+    .card{
+      background:var(--card-bg);
+      border-radius:18px;
+      padding:18px;
+      box-shadow: 0 8px 28px rgba(15,23,36,0.06);
+      border: 1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:420px;
+      position:relative;
+      overflow:visible;
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .card:focus-within, .card:hover{ transform:translateY(-6px); box-shadow: 0 18px 40px rgba(15,23,36,0.09); }
 
-    /* ستون قیمت و CTA */
-    .right { background:linear-gradient(180deg,#072b45,#0b57a1); color:#fff; padding:22px; display:flex; flex-direction:column; justify-content:space-between; }
-    .price { font-size:22px; font-weight:800; margin-bottom:6px; direction:ltr; text-align:left; }
-    .small { font-size:13px; opacity:0.9; margin-bottom:14px; }
-    .list { margin:12px 0 18px; }
-    .list li { margin:8px 0; font-size:14px; }
+    /* عنوان کارت - Gestalt: figure-ground + closure */
+    .card .title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .card .title h2{
+      font-size:18px;
+      margin:0;
+      padding:10px 14px;
+      border-radius:20px;
+      background: linear-gradient(180deg,#ffffff, #fbfdff);
+      border:1px solid rgba(0,0,0,0.04);
+      box-shadow: inset 0 -6px 10px rgba(0,0,0,0.01);
+      display:inline-block;
+    }
 
-    .cta { display:flex; gap:8px; flex-wrap:wrap; }
-    .btn { background:#ffd24d; color:#08303b; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; text-decoration:none; }
-    .btn.ghost { background:transparent; border:1px solid rgba(255,255,255,0.18); color:#fff; font-weight:600; }
+    /* بخشِ مشخصات (لیست) */
+    .specs{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:14px;
+    }
 
-    footer { text-align:center; padding:14px 0; font-size:13px; color:#667; }
-    .note { background:#fff8e6; padding:10px 12px; border-radius:8px; margin-top:12px; font-size:13px; color:#6a4b00; }
+    .spec{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(15,23,36,0.06);
+      background: linear-gradient(180deg, rgba(250,250,253,1), rgba(245,247,251,1));
+      font-size:14px;
+    }
+    .spec .label{ color:var(--muted); font-size:13px; }
+    .spec .value{ font-weight:700; }
 
-    /* زیباسازی ریز */
-    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .muted { color:#6a7880; font-size:13px; }
+    /* قیمت برجسته - Gestalt: prominence */
+    .priceBox{
+      margin-top:10px;
+      padding:10px;
+      border-radius:14px;
+      text-align:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
+      border:1px solid rgba(0,0,0,0.04);
+    }
+    .priceBox .price{ font-size:20px; font-weight:900; letter-spacing:0.5px; }
+
+    /* متن توضیحی انتهای کارت */
+    .card .note{
+      margin-top:14px;
+      padding:12px;
+      border-radius:10px;
+      background: #fbfbff;
+      color:#334155;
+      font-size:13px;
+      line-height:1.5;
+      border:1px solid rgba(15,23,36,0.03);
+    }
+
+    /* دکمه‌ها */
+    .actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+    .btn{
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      text-decoration:none;
+      text-align:center;
+      display:inline-block;
+    }
+    .btn-cta{ background:var(--accent-blue); color:#fff; box-shadow: 0 6px 18px rgba(11,111,168,0.18); }
+    .btn-ghost{ background:transparent; border:1px solid rgba(15,23,36,0.06); color:var(--text); }
+
+    /*Accent styles for each plan (Gestalt: similarity by color)*/
+    .plan-base .title h2{ background: linear-gradient(180deg,#f0f7ff,#ffffff); border:1px solid rgba(11,111,168,0.08); color:#06324b; }
+    .plan-base .spec{ }
+    .plan-base .priceBox{ border-left:4px solid var(--accent-blue); }
+
+    .plan-silver .title h2{ background: linear-gradient(180deg,#f7fbff,#ffffff); border:1px solid rgba(8,102,129,0.06); color:#05384a; }
+    .plan-silver .priceBox{ border-left:4px solid #6aa6d6; }
+
+    .plan-gold .title h2{ background: linear-gradient(180deg,#fff9f0,#fffdf9); border:1px solid rgba(224,168,0,0.12); color: #6b3e00; }
+    .plan-gold .priceBox{ border-left:4px solid var(--accent-gold); }
+
+    /* بصری سازی عدد قیمت (Gestalt: emphasis) */
+    .price { font-weight:900; font-size:22px; color:inherit; }
+
+    /* footer صفحه */
+    footer{ margin-top:18px; color:var(--muted); font-size:13px; text-align:center; }
+
+    /* دسترسی */
+    .sr-only{ position:absolute !important; width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="wrap">
     <header>
-      <h1>پلن پایه — بیزتاک</h1>
-      <p>نسخهٔ خلاصه‌شده از مزایا و هزینه‌ها برای مشاورها — کپی کنید و برای مشاورهای خود ارسال کنید.</p>
+      <h1>مقایسهٔ اشتراک‌ها — بیزتاک</h1>
+      <p>۳ سطح اشتراک به صورت مقایسه‌ای: اشتراک پایه، اشتراک نقره‌ای و پلن طلایی. قیمت‌ها برجسته‌اند و مزایا با اصول گِشتالت قابل‌رویت شده‌اند.</p>
     </header>
 
-    <section class="card" role="region" aria-label="پلن پایه بیزتاک">
-      <!-- توضیحات و جزئیات -->
-      <div class="left">
-        <div class="plan-title">
-          <span class="badge">پلن پایه</span>
-          <h2>مناسب برای مشاورانی که قصد دارند تا سقف ۱۷ جلسه برگزار کنند</h2>
-        </div>
-
-        <p class="desc">
-          توضیح کوتاه: اگر مشاور بدون خرید این پلن بخواهد ۱۷ جلسه برگزار کند، هزینهٔ عادی <strong>۱٬۷۸۵٬۰۰۰ تومان</strong> خواهد بود.
-          خرید این پلن مزایایی از جمله جایزهٔ دعوت، جایزهٔ برگزاری جلسات و کاهش کمیسیون فراهم می‌کند.
-        </p>
-
-        <div class="features">
-          <div class="feature">
-            <div class="muted">سقف دعوت</div>
-            <div class="num">۱۰ نفر</div>
-          </div>
-          <div class="feature">
-            <div class="muted">جایزه دعوت (برای ۱۰ نفر)</div>
-            <div class="num">۵۰۰٬۰۰۰ تومان</div>
-          </div>
-          <div class="feature">
-            <div class="muted">تعداد جوایز برگزاری جلسات</div>
-            <div class="num">۳ عدد</div>
-          </div>
-          <div class="feature">
-            <div class="muted">مبلغ جایزه برگزاری جلسات</div>
-            <div class="num">۶۰۰٬۰۰۰ تومان</div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <div class="muted">تخفیف کمیسیون جلسات</div>
-            <div class="num">۱٪</div>
-          </div>
-          <div>
-            <div class="muted">نرخ کمیسیون پایه</div>
-            <div class="num">۱۴٪</div>
-          </div>
-          <div>
-            <div class="muted">تعداد جلسات موظفی</div>
-            <div class="num">۱۷ جلسه</div>
-          </div>
-        </div>
-
-        <div style="margin-top:16px;">
-          <div class="muted">توضیح محاسبه</div>
-          <ul class="muted" style="margin-top:8px; line-height:1.6;">
-            <li>هزینهٔ بدون پلن برای ۱۷ جلسه: <strong>۱٬۷۸۵٬۰۰۰ تومان</strong></li>
-            <li>با خرید پلن، مشاور موارد زیر را دریافت می‌کند:
-              <ul>
-                <li>۶۰۰٬۰۰۰ تومان جایزهٔ برگزاری جلسات</li>
-                <li>۵۰۰٬۰۰۰ تومان جایزهٔ دعوت</li>
-                <li>کاهش ۱٪ در کمیسیون برگزاری جلسات</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-        <div class="note">
-          نکته: پلن باعث می‌شود مشاور تا سقفِ جلسات موظف را با شرایط ذکرشده اجرا کند و مزایا دریافت نماید.
-        </div>
-      </div>
-
-      <!-- قیمت و تایید -->
-      <aside class="right">
+    <main class="cards" role="list" aria-label="لیست پلن‌ها">
+      <!-- اشتراک پایه (راست) -->
+      <article class="card plan-base" role="listitem" aria-labelledby="title-base">
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <div class="small">قیمت پلن</div>
-              <div class="price">۶۶٬۰۰۰ تومان</div>
-            </div>
-            <div style="text-align:left;">
-              <div class="muted" style="color:rgba(255,255,255,0.85); font-size:13px;">پلن پایه</div>
-            </div>
+          <div class="title">
+            <h2 id="title-base">اشتراک پایه</h2>
+            <span class="sr-only">اشتراک پایه — مناسب برای شروع</span>
           </div>
 
-          <ul class="list" aria-label="مزایا">
-            <li>جایزه برگزاری جلسات: <strong>۶۰۰٬۰۰۰ تومان</strong></li>
-            <li>جایزه دعوت مشتریان: <strong>۵۰۰٬۰۰۰ تومان</strong></li>
-            <li>کاهش کمیسیون: <strong>۱٪</strong></li>
-            <li>پشتیبانی و راهنمایی راه‌اندازی پروفایل (محدود)</li>
-          </ul>
+          <section class="specs" aria-label="مشخصات اشتراک پایه">
+            <div class="spec"><div class="label">سقف دعوت از مشتری جهت دریافت جایزه نقدی:</div><div class="value">۱۰ نفر</div></div>
+            <div class="spec"><div class="label">جایزه نقدی دعوت از مشتریان:</div><div class="value">۵۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">جایزه نقدی برگزاری جلسات در بیزتاک:</div><div class="value">۶۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">کمیسیون برگزاری جلسات:</div><div class="value">۱۴٪</div></div>
+            <div class="spec"><div class="label">حداقل جلساتی که باید برگزار شود:</div><div class="value">۱۷ جلسه</div></div>
+          </section>
+
+          <div class="priceBox" aria-hidden="false">
+            <div style="color:var(--muted); font-size:13px;">مبلغ</div>
+            <div class="price" style="font-weight:900;"> <span style="font-size:18px;">۹۵٬۰۰۰</span> <span style="font-size:13px;">تومان</span> </div>
+          </div>
+
+          <div class="note" aria-label="توضیحات اشتراک پایه">
+            هزینهٔ برگزاری ۱۷ جلسه در بیزتاک بدون اشتراک پایه یا میانگین هر جلسه مشاوره = <strong>۱٬۷۸۵٬۰۰۰</strong> تومان.
+            <br><strong>سود شما با خرید اشتراک پایه:</strong> <strong>۱٬۶۹۰٬۰۰۰ تومان</strong>
+          </div>
         </div>
 
         <div>
-          <div class="cta">
-            <!-- اگر می‌خواهید لینک خرید یا فرم قرار دهید، href را عوض کنید -->
-            <a class="btn" href="mailto:info@biztalk.example?subject=درخواست%20پلن%20پایه%20بیزتاک&body=سلام%2C%20میخواهم%20پلن%20پایه%20را%20خریداری%20کنم.%20لطفا%20راهنمایی%20کنید.">درخواست خرید / اطلاعات بیشتر</a>
-            <a class="btn ghost" href="#" onclick="copyHTML()">کپی کد صفحه</a>
+          <div class="actions">
+            <a class="btn btn-cta" href="mailto:info@biztalk.example?subject=درخواست%20اشتراک%20پایه">درخواست خرید</a>
+            <a class="btn btn-ghost" href="#" onclick="copyCardHTML(event,'base')">کپی کارت</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- اشتراک نقره ای (وسط) -->
+      <article class="card plan-silver" role="listitem" aria-labelledby="title-silver">
+        <div>
+          <div class="title">
+            <h2 id="title-silver">اشتراک نقره‌ای</h2>
+            <span class="sr-only">اشتراک نقره‌ای — مناسب برای رشد</span>
           </div>
 
-          <p class="muted" style="margin-top:10px;">لینک ایمیل را عوض کنید تا به آدرس پرداخت یا فرمِ شما برود.</p>
+          <section class="specs" aria-label="مشخصات اشتراک نقره‌ای">
+            <div class="spec"><div class="label">سقف دعوت از مشتری جهت دریافت جایزه نقدی:</div><div class="value">۱۵ نفر</div></div>
+            <div class="spec"><div class="label">جایزه نقدی دعوت از مشتریان:</div><div class="value">۷۵۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">جایزه نقدی برگزاری جلسات در بیزتاک:</div><div class="value">۱٬۲۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">کمیسیون برگزاری جلسات:</div><div class="value">۱۳٪</div></div>
+            <div class="spec"><div class="label">حداقل جلساتی که باید برگزار شود:</div><div class="value">۲۸ جلسه</div></div>
+          </section>
+
+          <div class="priceBox">
+            <div style="color:var(--muted); font-size:13px;">مبلغ</div>
+            <div class="price"> <span style="font-size:18px;">۲۹۰٬۰۰۰</span> <span style="font-size:13px;">تومان</span> </div>
+          </div>
+
+          <div class="note" aria-label="توضیحات اشتراک نقره‌ای">
+            هزینهٔ برگزاری ۲۸ جلسه در بیزتاک بدون اشتراک نقره‌ای = میانگین هر جلسه × تعداد = <strong>...</strong>
+            <br><strong>سود شما با خرید اشتراک نقره‌ای:</strong> <strong>۲٬۸۶۰٬۰۰۰ تومان</strong>
+          </div>
         </div>
-      </aside>
-    </section>
+
+        <div>
+          <div class="actions">
+            <a class="btn btn-cta" href="mailto:info@biztalk.example?subject=درخواست%20اشتراک%20نقره‌ای">درخواست خرید</a>
+            <a class="btn btn-ghost" href="#" onclick="copyCardHTML(event,'silver')">کپی کارت</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- پلن طلایی (چپ) -->
+      <article class="card plan-gold" role="listitem" aria-labelledby="title-gold">
+        <div>
+          <div class="title">
+            <h2 id="title-gold">پلن طلایی</h2>
+            <span class="sr-only">پلن طلایی — مناسب برای رشد کامل</span>
+          </div>
+
+          <section class="specs" aria-label="مشخصات پلن طلایی">
+            <div class="spec"><div class="label">سقف دعوت از مشتری جهت دریافت جایزه نقدی:</div><div class="value">۲۵ نفر</div></div>
+            <div class="spec"><div class="label">جایزه نقدی دعوت از مشتریان:</div><div class="value">۱٬۲۵۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">جایزه نقدی برگزاری جلسات در بیزتاک:</div><div class="value">۲٬۲۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">کمیسیون برگزاری جلسات:</div><div class="value">۱۲٫۵٪</div></div>
+            <div class="spec"><div class="label">حداقل جلساتی که باید برگزار شود:</div><div class="value">۵۰ جلسه</div></div>
+          </section>
+
+          <div class="priceBox">
+            <div style="color:var(--muted); font-size:13px;">مبلغ</div>
+            <div class="price"> <span style="font-size:18px;">۷۹۰٬۰۰۰</span> <span style="font-size:13px;">تومان</span> </div>
+          </div>
+
+          <div class="note" aria-label="توضیحات پلن طلایی">
+            هزینهٔ برگزاری ۵۰ جلسه در بیزتاک بدون اشتراک طلایی = میانگین هر جلسه × تعداد = <strong>...</strong>
+            <br><strong>سود شما با خرید اشتراک طلایی:</strong> <strong>۲٬۴۶۰٬۰۰۰ تومان</strong>
+          </div>
+        </div>
+
+        <div>
+          <div class="actions">
+            <a class="btn btn-cta" href="mailto:info@biztalk.example?subject=درخواست%20پلن%20طلایی">درخواست خرید</a>
+            <a class="btn btn-ghost" href="#" onclick="copyCardHTML(event,'gold')">کپی کارت</a>
+          </div>
+        </div>
+      </article>
+    </main>
 
     <footer>
-      <div>می‌خواهید این صفحه را به صورت PDF یا فایل HTML داشته باشید؟ کافیست فایل `index.html` را به من ارسال کنید یا دانلود کنید.</div>
+      عددها و متن‌های توضیحی (مقادیر سود/هزینه) از تصویر گرفته شده‌اند — اگر می‌خواهی اعداد را دقیق‌تر یا متن توضیحی را مفصل‌تر کنم، بگو تا ویرایش کنم.
     </footer>
   </div>
 
   <script>
-    function copyHTML() {
-      const html = document.documentElement.outerHTML;
-      navigator.clipboard.writeText(html).then(()=>{
-        alert('کد HTML صفحه به کلیپ‌بورد شما کپی شد. می‌توانید آن را در فایل index.html ذخیره کنید.');
-      }).catch(()=> alert('کپی ناموفق بود — لطفاً دستی کپی کنید.'));
+    // تابع کپی ساده برای هر کارت (کپی HTML همان بخش)
+    function copyCardHTML(e, id){
+      e.preventDefault();
+      let container;
+      if(id==='base') container = document.querySelector('.plan-base');
+      else if(id==='silver') container = document.querySelector('.plan-silver');
+      else container = document.querySelector('.plan-gold');
+
+      if(!container){ alert('کارت پیدا نشد'); return; }
+      // کپی HTML کارت
+      navigator.clipboard.writeText(container.outerHTML).then(()=>{
+        alert('کد HTML کارت به کلیپ‌بورد کپی شد. می‌توانید آن را در ایمیل یا فایل قرار دهید.');
+      }).catch(()=> alert('کپی ناموفق بود — ممکن است مرورگر شما اجازه ندهد.'));
     }
   </script>
 </body>
