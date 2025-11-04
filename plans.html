@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>پلن‌های اشتراک — بیزتاک</title>
+
+  <style>
+    /* پایه */
+    :root{
+      --bg:#f6f8fb;
+      --card-bg: #ffffff;
+      --muted:#6b7280;
+      --text:#0f1724;
+      --accent-gold: #e0a800;
+      --accent-silver: linear-gradient(135deg,#cbd5e1,#e6eef8);
+      --accent-blue: #0b6fa8;
+      --border: rgba(15,23,36,0.08);
+      --glass: rgba(255,255,255,0.6);
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: "Vazirmatn", "Segoe UI", Tahoma, Arial, sans-serif;
+      background: radial-gradient(1200px 400px at 10% 10%, rgba(14,165,233,0.03), transparent 10%),
+                  linear-gradient(180deg, var(--bg), #ffffff);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      padding:28px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
+
+    .wrap{ width:100%; max-width:1200px; }
+
+    header{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    header h1{ font-size:20px; margin-bottom:6px; }
+    header p{ color:var(--muted); font-size:13px; margin:0 12px; }
+
+    /* شبکه کارت‌ها - Gestalt: similarity (یک‌پارچگی)، proximity */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap:20px;
+      align-items:stretch;
+    }
+    @media (max-width:960px){
+      .cards{ grid-template-columns: 1fr; }
+    }
+
+    /* یک کارت */
+    .card{
+      background:var(--card-bg);
+      border-radius:18px;
+      padding:18px;
+      box-shadow: 0 8px 28px rgba(15,23,36,0.06);
+      border: 1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:420px;
+      position:relative;
+      overflow:visible;
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .card:focus-within, .card:hover{ transform:translateY(-6px); box-shadow: 0 18px 40px rgba(15,23,36,0.09); }
+
+    /* عنوان کارت - Gestalt: figure-ground + closure */
+    .card .title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .card .title h2{
+      font-size:18px;
+      margin:0;
+      padding:10px 14px;
+      border-radius:20px;
+      background: linear-gradient(180deg,#ffffff, #fbfdff);
+      border:1px solid rgba(0,0,0,0.04);
+      box-shadow: inset 0 -6px 10px rgba(0,0,0,0.01);
+      display:inline-block;
+    }
+
+    /* بخشِ مشخصات (لیست) */
+    .specs{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .spec{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(15,23,36,0.06);
+      background: linear-gradient(180deg, rgba(250,250,253,1), rgba(245,247,251,1));
+      font-size:14px;
+    }
+    .spec .label{ color:var(--muted); font-size:13px; }
+    .spec .value{ font-weight:700; }
+
+    /* قیمت برجسته - Gestalt: prominence */
+    .priceBox{
+      margin-top:10px;
+      padding:10px;
+      border-radius:14px;
+      text-align:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
+      border:1px solid rgba(0,0,0,0.04);
+    }
+    .priceBox .price{ font-size:20px; font-weight:900; letter-spacing:0.5px; }
+
+    /* متن توضیحی انتهای کارت */
+    .card .note{
+      margin-top:14px;
+      padding:12px;
+      border-radius:10px;
+      background: #fbfbff;
+      color:#334155;
+      font-size:13px;
+      line-height:1.5;
+      border:1px solid rgba(15,23,36,0.03);
+    }
+
+    /* دکمه‌ها */
+    .actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+    .btn{
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      text-decoration:none;
+      text-align:center;
+      display:inline-block;
+    }
+    .btn-cta{ background:var(--accent-blue); color:#fff; box-shadow: 0 6px 18px rgba(11,111,168,0.18); }
+    .btn-ghost{ background:transparent; border:1px solid rgba(15,23,36,0.06); color:var(--text); }
+
+    /*Accent styles for each plan (Gestalt: similarity by color)*/
+    .plan-base .title h2{ background: linear-gradient(180deg,#f0f7ff,#ffffff); border:1px solid rgba(11,111,168,0.08); color:#06324b; }
+    .plan-base .spec{ }
+    .plan-base .priceBox{ border-left:4px solid var(--accent-blue); }
+
+    .plan-silver .title h2{ background: linear-gradient(180deg,#f7fbff,#ffffff); border:1px solid rgba(8,102,129,0.06); color:#05384a; }
+    .plan-silver .priceBox{ border-left:4px solid #6aa6d6; }
+
+    .plan-gold .title h2{ background: linear-gradient(180deg,#fff9f0,#fffdf9); border:1px solid rgba(224,168,0,0.12); color: #6b3e00; }
+    .plan-gold .priceBox{ border-left:4px solid var(--accent-gold); }
+
+    /* بصری سازی عدد قیمت (Gestalt: emphasis) */
+    .price { font-weight:900; font-size:22px; color:inherit; }
+
+    /* footer صفحه */
+    footer{ margin-top:18px; color:var(--muted); font-size:13px; text-align:center; }
+
+    /* دسترسی */
+    .sr-only{ position:absolute !important; width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>مقایسهٔ اشتراک‌ها — بیزتاک</h1>
+      <p>۳ سطح اشتراک به صورت مقایسه‌ای: اشتراک پایه، اشتراک نقره‌ای و پلن طلایی. قیمت‌ها برجسته‌اند و مزایا با اصول گِشتالت قابل‌رویت شده‌اند.</p>
+    </header>
+
+    <main class="cards" role="list" aria-label="لیست پلن‌ها">
+      <!-- اشتراک پایه (راست) -->
+      <article class="card plan-base" role="listitem" aria-labelledby="title-base">
+        <div>
+          <div class="title">
+            <h2 id="title-base">اشتراک پایه</h2>
+            <span class="sr-only">اشتراک پایه — مناسب برای شروع</span>
+          </div>
+
+          <section class="specs" aria-label="مشخصات اشتراک پایه">
+            <div class="spec"><div class="label">سقف دعوت از مشتری جهت دریافت جایزه نقدی:</div><div class="value">۱۰ نفر</div></div>
+            <div class="spec"><div class="label">جایزه نقدی دعوت از مشتریان:</div><div class="value">۵۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">جایزه نقدی برگزاری جلسات در بیزتاک:</div><div class="value">۶۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">کمیسیون برگزاری جلسات:</div><div class="value">۱۴٪</div></div>
+            <div class="spec"><div class="label">حداقل جلساتی که باید برگزار شود:</div><div class="value">۱۷ جلسه</div></div>
+          </section>
+
+          <div class="priceBox" aria-hidden="false">
+            <div style="color:var(--muted); font-size:13px;">مبلغ</div>
+            <div class="price" style="font-weight:900;"> <span style="font-size:18px;">۹۵٬۰۰۰</span> <span style="font-size:13px;">تومان</span> </div>
+          </div>
+
+          <div class="note" aria-label="توضیحات اشتراک پایه">
+            هزینهٔ برگزاری ۱۷ جلسه در بیزتاک بدون اشتراک پایه یا میانگین هر جلسه مشاوره = <strong>۱٬۷۸۵٬۰۰۰</strong> تومان.
+            <br><strong>سود شما با خرید اشتراک پایه:</strong> <strong>۱٬۶۹۰٬۰۰۰ تومان</strong>
+          </div>
+        </div>
+
+        <div>
+          <div class="actions">
+            <a class="btn btn-cta" href="mailto:info@biztalk.example?subject=درخواست%20اشتراک%20پایه">درخواست خرید</a>
+            <a class="btn btn-ghost" href="#" onclick="copyCardHTML(event,'base')">کپی کارت</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- اشتراک نقره ای (وسط) -->
+      <article class="card plan-silver" role="listitem" aria-labelledby="title-silver">
+        <div>
+          <div class="title">
+            <h2 id="title-silver">اشتراک نقره‌ای</h2>
+            <span class="sr-only">اشتراک نقره‌ای — مناسب برای رشد</span>
+          </div>
+
+          <section class="specs" aria-label="مشخصات اشتراک نقره‌ای">
+            <div class="spec"><div class="label">سقف دعوت از مشتری جهت دریافت جایزه نقدی:</div><div class="value">۱۵ نفر</div></div>
+            <div class="spec"><div class="label">جایزه نقدی دعوت از مشتریان:</div><div class="value">۷۵۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">جایزه نقدی برگزاری جلسات در بیزتاک:</div><div class="value">۱٬۲۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">کمیسیون برگزاری جلسات:</div><div class="value">۱۳٪</div></div>
+            <div class="spec"><div class="label">حداقل جلساتی که باید برگزار شود:</div><div class="value">۲۸ جلسه</div></div>
+          </section>
+
+          <div class="priceBox">
+            <div style="color:var(--muted); font-size:13px;">مبلغ</div>
+            <div class="price"> <span style="font-size:18px;">۲۹۰٬۰۰۰</span> <span style="font-size:13px;">تومان</span> </div>
+          </div>
+
+          <div class="note" aria-label="توضیحات اشتراک نقره‌ای">
+            هزینهٔ برگزاری ۲۸ جلسه در بیزتاک بدون اشتراک نقره‌ای = میانگین هر جلسه × تعداد = <strong>...</strong>
+            <br><strong>سود شما با خرید اشتراک نقره‌ای:</strong> <strong>۲٬۸۶۰٬۰۰۰ تومان</strong>
+          </div>
+        </div>
+
+        <div>
+          <div class="actions">
+            <a class="btn btn-cta" href="mailto:info@biztalk.example?subject=درخواست%20اشتراک%20نقره‌ای">درخواست خرید</a>
+            <a class="btn btn-ghost" href="#" onclick="copyCardHTML(event,'silver')">کپی کارت</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- پلن طلایی (چپ) -->
+      <article class="card plan-gold" role="listitem" aria-labelledby="title-gold">
+        <div>
+          <div class="title">
+            <h2 id="title-gold">پلن طلایی</h2>
+            <span class="sr-only">پلن طلایی — مناسب برای رشد کامل</span>
+          </div>
+
+          <section class="specs" aria-label="مشخصات پلن طلایی">
+            <div class="spec"><div class="label">سقف دعوت از مشتری جهت دریافت جایزه نقدی:</div><div class="value">۲۵ نفر</div></div>
+            <div class="spec"><div class="label">جایزه نقدی دعوت از مشتریان:</div><div class="value">۱٬۲۵۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">جایزه نقدی برگزاری جلسات در بیزتاک:</div><div class="value">۲٬۲۰۰٬۰۰۰ تومان</div></div>
+            <div class="spec"><div class="label">کمیسیون برگزاری جلسات:</div><div class="value">۱۲٫۵٪</div></div>
+            <div class="spec"><div class="label">حداقل جلساتی که باید برگزار شود:</div><div class="value">۵۰ جلسه</div></div>
+          </section>
+
+          <div class="priceBox">
+            <div style="color:var(--muted); font-size:13px;">مبلغ</div>
+            <div class="price"> <span style="font-size:18px;">۷۹۰٬۰۰۰</span> <span style="font-size:13px;">تومان</span> </div>
+          </div>
+
+          <div class="note" aria-label="توضیحات پلن طلایی">
+            هزینهٔ برگزاری ۵۰ جلسه در بیزتاک بدون اشتراک طلایی = میانگین هر جلسه × تعداد = <strong>...</strong>
+            <br><strong>سود شما با خرید اشتراک طلایی:</strong> <strong>۲٬۴۶۰٬۰۰۰ تومان</strong>
+          </div>
+        </div>
+
+        <div>
+          <div class="actions">
+            <a class="btn btn-cta" href="mailto:info@biztalk.example?subject=درخواست%20پلن%20طلایی">درخواست خرید</a>
+            <a class="btn btn-ghost" href="#" onclick="copyCardHTML(event,'gold')">کپی کارت</a>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      عددها و متن‌های توضیحی (مقادیر سود/هزینه) از تصویر گرفته شده‌اند — اگر می‌خواهی اعداد را دقیق‌تر یا متن توضیحی را مفصل‌تر کنم، بگو تا ویرایش کنم.
+    </footer>
+  </div>
+
+  <script>
+    // تابع کپی ساده برای هر کارت (کپی HTML همان بخش)
+    function copyCardHTML(e, id){
+      e.preventDefault();
+      let container;
+      if(id==='base') container = document.querySelector('.plan-base');
+      else if(id==='silver') container = document.querySelector('.plan-silver');
+      else container = document.querySelector('.plan-gold');
+
+      if(!container){ alert('کارت پیدا نشد'); return; }
+      // کپی HTML کارت
+      navigator.clipboard.writeText(container.outerHTML).then(()=>{
+        alert('کد HTML کارت به کلیپ‌بورد کپی شد. می‌توانید آن را در ایمیل یا فایل قرار دهید.');
+      }).catch(()=> alert('کپی ناموفق بود — ممکن است مرورگر شما اجازه ندهد.'));
+    }
+  </script>
+</body>
+</html>
